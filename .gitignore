@@ -4,3 +4,4 @@ public/build/
 .env
 .DS_Store
 *.tsbuildinfo
+coverage

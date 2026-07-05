@@ -11,7 +11,7 @@ export function detalleView(props: DetalleViewProps): string {
 
   return `
     <div class="space-y-8">
-      <a href="/" class="inline-flex items-center text-sm text-sky-700 hover:text-sky-600">&larr; Volver al listado</a>
+      <a href="/" data-testid="back-link" class="inline-flex items-center text-sm text-sky-700 hover:text-sky-600">&larr; Volver al listado</a>
 
       <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <img
@@ -23,7 +23,7 @@ export function detalleView(props: DetalleViewProps): string {
         <div class="p-6 space-y-6">
           <div class="flex items-start justify-between flex-wrap gap-4">
             <div>
-              <h1 class="text-3xl font-bold text-gray-900">${escapeHtml(alojamiento.titulo)}</h1>
+              <h1 class="text-3xl font-bold text-gray-900" data-testid="detail-title">${escapeHtml(alojamiento.titulo)}</h1>
               <p class="text-gray-500 mt-1">${escapeHtml(alojamiento.destino)}</p>
             </div>
             <div class="text-right">
@@ -35,14 +35,14 @@ export function detalleView(props: DetalleViewProps): string {
           <p class="text-gray-700 leading-relaxed">${escapeHtml(alojamiento.descripcionLarga)}</p>
 
           <div>
-            <h2 class="text-lg font-semibold text-gray-900 mb-3">Servicios</h2>
+            <h2 class="text-lg font-semibold text-gray-900 mb-3" data-testid="services-heading">Servicios</h2>
             <div class="flex flex-wrap gap-2">
               ${alojamiento.servicios.map((servicio) => `<span class="bg-sky-50 text-sky-700 text-sm px-3 py-1 rounded-full">${escapeHtml(servicio)}</span>`).join('')}
             </div>
           </div>
 
           <div>
-            <h2 class="text-lg font-semibold text-gray-900 mb-3">Opiniones (${alojamiento.opiniones.length})</h2>
+            <h2 class="text-lg font-semibold text-gray-900 mb-3" data-testid="opinions-heading">Opiniones (${alojamiento.opiniones.length})</h2>
             <div class="space-y-4">
               ${alojamiento.opiniones.map((opinion) => `
                 <div class="border-b border-gray-100 pb-4 last:border-0">

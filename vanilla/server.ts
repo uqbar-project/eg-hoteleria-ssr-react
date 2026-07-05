@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs'
-import { createServer, type IncomingMessage, type ServerResponse } from 'node:http'
+import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http'
 import { dirname, extname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -112,7 +112,7 @@ async function manejarDetalle(response: ServerResponse, id: string): Promise<voi
     responderConLayout(response, 404, {
       title: 'Alojamiento no encontrado',
       content:
-        '<p class="text-gray-500">Alojamiento no encontrado.</p><a href="/" class="text-sky-700 hover:text-sky-600">&larr; Volver al listado</a>',
+        '<p class="text-gray-500">Alojamiento no encontrado.</p><a href="/" data-testid="back-link" class="text-sky-700 hover:text-sky-600">&larr; Volver al listado</a>',
     })
     return
   }
@@ -156,8 +156,19 @@ function responderConLayout(
   response.end(html)
 }
 
-const PORT = Number(process.env.PORT) || 3000
+const DEFAULT_PORT = Number(process.env.PORT) || 3000
 
-server.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`)
-})
+export function startServer(port = DEFAULT_PORT): Promise<{ server: Server; port: number }> {
+  return new Promise((resolve) => {
+    server.listen(port, () => {
+      const address = server.address()
+      const actualPort = typeof address === 'object' && address ? address.port : port
+      console.log(`Servidor corriendo en http://localhost:${actualPort}`)
+      resolve({ server, port: actualPort })
+    })
+  })
+}
+
+if (!process.env.VITEST) {
+  startServer()
+}

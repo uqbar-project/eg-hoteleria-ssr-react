@@ -26,12 +26,13 @@ export function homeView(props: HomeViewProps): string {
         <h1 class="text-3xl font-bold text-gray-900 mb-2">Busc\u00e1 tu alojamiento ideal</h1>
         <p class="text-gray-600 mb-6">Encontr\u00e1 el hospedaje perfecto para tus pr\u00f3ximas vacaciones</p>
 
-        <form method="get" class="flex flex-wrap gap-4 items-end">
+        <form method="get" data-testid="search-form" class="flex flex-wrap gap-4 items-end">
           <div class="flex-1 min-w-[200px]">
             <label for="destino" class="block text-sm font-medium text-gray-700 mb-1">Destino</label>
             <select
               id="destino"
               name="destino"
+              data-testid="destino-select"
               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             >
               <option value="">Todos los destinos</option>
@@ -45,6 +46,7 @@ export function homeView(props: HomeViewProps): string {
               id="checkIn"
               name="checkIn"
               type="date"
+              data-testid="checkin-input"
               value="${escapeHtml(checkIn)}"
               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             />
@@ -56,6 +58,7 @@ export function homeView(props: HomeViewProps): string {
               id="checkOut"
               name="checkOut"
               type="date"
+              data-testid="checkout-input"
               value="${escapeHtml(checkOut)}"
               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             />
@@ -77,9 +80,9 @@ export function homeView(props: HomeViewProps): string {
 
         ${alojamientos.length === 0
           ? '<p class="text-gray-500">No se encontraron alojamientos para este destino.</p>'
-          : `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          : `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="card-grid">
               ${alojamientos.map((alojamiento) => `
-                <a href="/accommodation/${escapeHtml(alojamiento.id)}" class="flex flex-col bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                <a href="/accommodation/${escapeHtml(alojamiento.id)}" data-testid="card-${escapeHtml(alojamiento.id)}" class="flex flex-col bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
                   <img src="${escapeHtml(alojamiento.imagen)}" alt="${escapeHtml(alojamiento.titulo)}" class="w-full h-48 object-cover" />
                   <div class="flex flex-col flex-1 p-4 gap-2">
                     <h3 class="text-lg font-semibold text-gray-900">${escapeHtml(alojamiento.titulo)}</h3>
