@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "includes": ["**", "!coverage", "!vanilla/build", "!remix/build"]
+  },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",

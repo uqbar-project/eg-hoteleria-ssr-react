@@ -1,6 +1,5 @@
-import { escapeHtml } from '../escapeHtml.js'
-
 import type { Alojamiento } from '../../shared/models/alojamiento.js'
+import { escapeHtml } from '../escapeHtml.js'
 
 interface DetalleViewProps {
   alojamiento: Alojamiento
@@ -44,7 +43,9 @@ export function detalleView(props: DetalleViewProps): string {
           <div>
             <h2 class="text-lg font-semibold text-gray-900 mb-3" data-testid="opinions-heading">Opiniones (${alojamiento.opiniones.length})</h2>
             <div class="space-y-4">
-              ${alojamiento.opiniones.map((opinion) => `
+              ${alojamiento.opiniones
+                .map(
+                  (opinion) => `
                 <div class="border-b border-gray-100 pb-4 last:border-0">
                   <div class="flex items-center justify-between mb-1">
                     <span class="font-medium text-gray-900">${escapeHtml(opinion.autor)}</span>
@@ -56,7 +57,9 @@ export function detalleView(props: DetalleViewProps): string {
                   <p class="text-gray-600 text-sm">${escapeHtml(opinion.texto)}</p>
                   <p class="text-xs text-gray-400 mt-1">${escapeHtml(opinion.fecha)}</p>
                 </div>
-              `).join('')}
+              `,
+                )
+                .join('')}
             </div>
           </div>
 

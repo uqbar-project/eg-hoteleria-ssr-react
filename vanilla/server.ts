@@ -97,9 +97,7 @@ async function manejarHome(response: ServerResponse, url: URL): Promise<void> {
   })
 
   responderConLayout(response, 200, {
-    title: destino
-      ? `Alojamientos en ${destino}`
-      : 'Alojamientos - Encontrá tu hospedaje ideal',
+    title: destino ? `Alojamientos en ${destino}` : 'Alojamientos - Encontrá tu hospedaje ideal',
     description: 'Buscá y compará alojamientos en los mejores destinos',
     content,
   })
@@ -146,11 +144,7 @@ function servirArchivoEstatico(response: ServerResponse, pathname: string): void
   response.end(content)
 }
 
-function responderConLayout(
-  response: ServerResponse,
-  status: number,
-  options: LayoutParams,
-): void {
+function responderConLayout(response: ServerResponse, status: number, options: LayoutParams): void {
   const html = layout(options)
   response.writeHead(status, { 'Content-Type': 'text/html; charset=utf-8' })
   response.end(html)

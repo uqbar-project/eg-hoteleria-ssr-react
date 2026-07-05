@@ -2,10 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { Alojamiento, Opinion } from '../models/alojamiento.js'
 
-function crearAlojamiento(
-  opiniones: Opinion[] = [],
-  precioPorNoche = 1000,
-): Alojamiento {
+function crearAlojamiento(opiniones: Opinion[] = [], precioPorNoche = 1000): Alojamiento {
   return new Alojamiento(
     'test-id',
     'Test',

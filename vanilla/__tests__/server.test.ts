@@ -106,15 +106,11 @@ describe('Vanilla SSR Server', () => {
     it('muestra mensaje cuando no hay resultados', async () => {
       const { doc } = await getHTML('/?destino=Madagascar')
       expect(queryByTestId(doc, 'card-grid')).toBeNull()
-      expect(doc.body.textContent).toContain(
-        'No se encontraron alojamientos para este destino.',
-      )
+      expect(doc.body.textContent).toContain('No se encontraron alojamientos para este destino.')
     })
 
     it('al filtrar con fechas, el precio refleja el total por noches', async () => {
-      const { doc } = await getHTML(
-        '/?destino=Bariloche&checkIn=2026-07-05&checkOut=2026-07-08',
-      )
+      const { doc } = await getHTML('/?destino=Bariloche&checkIn=2026-07-05&checkOut=2026-07-08')
       const card = queryByTestId(doc, 'card-bariloche')
       // 52.000 * 3 noches = 156.000
       expect(card?.textContent).toContain('$156.000')

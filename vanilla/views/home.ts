@@ -78,10 +78,13 @@ export function homeView(props: HomeViewProps): string {
           ${destino ? `Alojamientos en ${escapeHtml(destino)}` : 'Todos los alojamientos'}
         </h2>
 
-        ${alojamientos.length === 0
-          ? '<p class="text-gray-500">No se encontraron alojamientos para este destino.</p>'
-          : `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="card-grid">
-              ${alojamientos.map((alojamiento) => `
+        ${
+          alojamientos.length === 0
+            ? '<p class="text-gray-500">No se encontraron alojamientos para este destino.</p>'
+            : `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="card-grid">
+              ${alojamientos
+                .map(
+                  (alojamiento) => `
                 <a href="/accommodation/${escapeHtml(alojamiento.id)}" data-testid="card-${escapeHtml(alojamiento.id)}" class="flex flex-col bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
                   <img src="${escapeHtml(alojamiento.imagen)}" alt="${escapeHtml(alojamiento.titulo)}" class="w-full h-48 object-cover" />
                   <div class="flex flex-col flex-1 p-4 gap-2">
@@ -93,7 +96,9 @@ export function homeView(props: HomeViewProps): string {
                     </div>
                   </div>
                 </a>
-              `).join('')}
+              `,
+                )
+                .join('')}
             </div>`
         }
       </section>
