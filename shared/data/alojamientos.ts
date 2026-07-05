@@ -1,4 +1,4 @@
-import { Alojamiento, Opinion } from '~/models/alojamiento'
+import { Alojamiento, Opinion } from '../models/alojamiento.js'
 
 export const data: Alojamiento[] = [
   new Alojamiento(
@@ -27,7 +27,7 @@ export const data: Alojamiento[] = [
     'Cabañas del Lago',
     'Cabañas de montaña con vista al lago Nahuel Huapi',
     'Cabañas de estilo alpino rodeadas de bosque nativo con vista panorámica al lago Nahuel Huapi. Cada cabaña cuenta con chimenea, hidromasaje y cocina totalmente equipada. El lugar perfecto para desconectar y disfrutar de la naturaleza.',
-    'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80',
+    'https://images.unsplash.com/photo-1773330123668-e3bcd61a2505?w=800&q=80',
     52000,
     'Bariloche',
     [

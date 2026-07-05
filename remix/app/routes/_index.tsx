@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 
-import { repositorioAlojamientos } from '~/repositories/alojamientos'
+import { repositorioAlojamientos } from '../../../shared/repositories/alojamientos.js'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -103,27 +103,22 @@ export default function Index() {
               <Link
                 key={alojamiento.id}
                 to={`/accommodation/${alojamiento.id}`}
-                className="block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
+                className="flex flex-col bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
               >
                 <img
                   src={alojamiento.imagen}
                   alt={alojamiento.titulo}
                   className="w-full h-48 object-cover"
                 />
-                <div className="p-4 space-y-2">
+                <div className="flex flex-col flex-1 p-4 gap-2">
                   <h3 className="text-lg font-semibold text-gray-900">{alojamiento.titulo}</h3>
-                  <p className="text-sm text-gray-500">{alojamiento.descripcionCorta}</p>
-                  <div className="flex items-center justify-between pt-2">
+                  <p className="text-sm text-gray-500 flex-1">{alojamiento.descripcionCorta}</p>
+                  <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-gray-600">{alojamiento.destino}</span>
                     <span className="text-lg font-bold text-sky-700">
                       ${alojamiento.precioTotal.toLocaleString('es-AR')}
                     </span>
                   </div>
-                  {checkIn && checkOut && (
-                    <p className="text-xs text-gray-400">
-                      Precio total para las fechas seleccionadas
-                    </p>
-                  )}
                 </div>
               </Link>
             ))}

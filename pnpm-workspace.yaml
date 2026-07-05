@@ -1,0 +1,4 @@
+packages:
+  - 'remix'
+  - 'vanilla'
+  - 'shared'

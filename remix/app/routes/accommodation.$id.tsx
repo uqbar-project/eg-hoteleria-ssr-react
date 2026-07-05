@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
-import { repositorioAlojamientos } from '~/repositories/alojamientos'
+import { repositorioAlojamientos } from '../../../shared/repositories/alojamientos.js'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data) {

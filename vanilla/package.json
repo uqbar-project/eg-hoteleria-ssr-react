@@ -1,0 +1,19 @@
+{
+  "name": "vanilla",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build:public": "esbuild public/client.ts --bundle --minify --outfile=build/client.js",
+    "dev": "pnpm build:public && tsx server.ts",
+    "dev:watch": "pnpm build:public && tsx --watch server.ts"
+  },
+  "dependencies": {
+    "date-fns": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.0"
+  },
+  "private": true
+}

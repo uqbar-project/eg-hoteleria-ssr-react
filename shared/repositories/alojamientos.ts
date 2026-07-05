@@ -1,5 +1,5 @@
-import { data } from '~/data/alojamientos'
-import type { Alojamiento } from '~/models/alojamiento'
+import { data } from '../data/alojamientos.js'
+import type { Alojamiento } from '../models/alojamiento.js'
 
 function demorar(ms: number): Promise<void> {
   return new Promise((resolver) => setTimeout(resolver, ms))

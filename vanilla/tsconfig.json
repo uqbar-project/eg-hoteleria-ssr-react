@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "lib": ["ES2022", "DOM"],
+    "types": ["node"],
+    "rootDir": ".."
+  },
+  "include": [
+    "./server.ts",
+    "./views/**/*.ts",
+    "./escapeHtml.ts",
+    "./public/client.ts",
+    "../shared/**/*.ts"
+  ]
+}
