@@ -20,6 +20,7 @@ export default defineConfig({
         'vanilla/public/**',
         'remix/vite-env.d.ts',
         'remix/vite.config.ts',
+        'remix/app/root.tsx',
       ],
       reporter: ['text', 'lcov', 'html'],
     },

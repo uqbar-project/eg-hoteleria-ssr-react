@@ -31,7 +31,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm vitest run --coverage shared/__tests__/
+      - run: pnpm vitest run --coverage "--coverage.include=shared/**/*.ts" shared/__tests__/
       - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

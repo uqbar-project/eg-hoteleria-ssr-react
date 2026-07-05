@@ -19,7 +19,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter remix exec tsc --noEmit
       - run: pnpm --filter remix build
-      - run: pnpm vitest run --coverage remix/__tests__/
+      - run: pnpm vitest run --coverage "--coverage.include=remix/**/*.ts" "--coverage.include=shared/**/*.ts" remix/__tests__/
       - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

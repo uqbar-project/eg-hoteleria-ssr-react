@@ -3,7 +3,7 @@
 [![Build Vanilla](https://github.com/uqbar-project/eg-hoteleria-ssr-react/actions/workflows/build-vanilla.yml/badge.svg)](https://github.com/uqbar-project/eg-hoteleria-ssr-react/actions/workflows/build-vanilla.yml)
 [![Coverage Vanilla](https://codecov.io/gh/uqbar-project/eg-hoteleria-ssr-react/graph/badge.svg?flag=vanilla)](https://codecov.io/gh/uqbar-project/eg-hoteleria-ssr-react)
 [![Build Remix](https://github.com/uqbar-project/eg-hoteleria-ssr-react/actions/workflows/build-remix.yml/badge.svg)](https://github.com/uqbar-project/eg-hoteleria-ssr-react/actions/workflows/build-remix.yml)
-[![Coverage Remix](https://codecov.io/gh/uqbar-project/eg-hoteleria-ssr-react/graph/badge.svg?flag=shared)](https://codecov.io/gh/uqbar-project/eg-hoteleria-ssr-react)
+[![Coverage Remix](https://codecov.io/gh/uqbar-project/eg-hoteleria-ssr-react/graph/badge.svg?flag=remix)](https://codecov.io/gh/uqbar-project/eg-hoteleria-ssr-react)
 
 Proyecto didáctico de Server-Side Rendering (SSR) con dos implementaciones
 paralelas en un mismo monorepo: **Remix** (React full-stack framework) y
@@ -39,18 +39,19 @@ social se genera una previsualización rica. No hace falta que el destinatario
 tenga JavaScript activado ni que espere a que una SPA cargue para ver el
 contenido.
 
-### Menos JavaScript, más velocidad
+### HTML disponible sin JavaScript
 
-| Aspecto | SPA típica | SSR (este proyecto) |
-|---|---|---|
-| Primer paint | Espera a que cargue y ejecute JS | HTML inmediato desde el servidor |
-| Bundle inicial | ~150–300 KB de JS | ~1 KB (Vanilla) o ~150 KB (Remix, con hidratación progresiva) |
-| Tiempo hasta interactivo | Depende de descarga + parse + ejecución JS | Navegador pinta HTML de inmediato |
-| Usuarios con JS lento/desactivado | No ven nada o ven una pantalla en blanco | Ven el contenido completo igual |
+| Aspecto | SPA típica | SSR (Vanilla) | SSR (Remix) |
+|---|---|---|---|
+| HTML inicial | Vacío (solo `<div id="root">`) | Completo con todos los datos | Completo con todos los datos |
+| Bundle JS | ~150–300 KB obligatorio | ~1 KB (solo Web Share) | ~150 KB (hidratación) |
+| Funciona sin JS | No | Sí | No (router client-side) |
+| Primer paint | Requiere descargar + parsear + ejecutar JS | HTML inmediato | HTML inmediato |
+| Navegación entre páginas | Instantánea (router client-side) | Recarga completa | Instantánea (router client-side) |
 
-En la versión **Vanilla** el servidor envía HTML puro; el único JS que existe
-es un script de ~1 KB que agrega el botón "Compartir" solo si el navegador
-soporta Web Share API. La página es funcional al 100 % incluso con JavaScript
+La versión **Vanilla** envía HTML puro; el único JS (~1 KB) agrega el botón
+"Compartir" solo si el navegador soporta Web Share API. La página es funcional
+al 100 % incluso con JavaScript
 desactivado.
 
 En la versión **Remix** el HTML inicial también se genera en servidor, y luego

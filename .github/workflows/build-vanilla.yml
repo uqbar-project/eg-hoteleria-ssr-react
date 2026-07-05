@@ -18,7 +18,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter vanilla build:public
-      - run: pnpm vitest run --coverage vanilla/__tests__/
+      - run: pnpm vitest run --coverage "--coverage.include=vanilla/**/*.ts" "--coverage.include=shared/**/*.ts" vanilla/__tests__/
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
