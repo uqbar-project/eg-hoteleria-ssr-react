@@ -6,7 +6,7 @@ export default defineConfig({
     jsxImportSource: 'react',
   },
   test: {
-    include: ['shared/**/*.test.ts', 'vanilla/**/*.test.ts', 'remix/**/*.test.ts'],
+    include: ['shared/**/*.test.ts', 'vanilla/**/*.test.ts', 'remix/**/*.test.{ts,tsx}'],
     testTimeout: 10000,
     globals: true,
     coverage: {
@@ -15,9 +15,11 @@ export default defineConfig({
       exclude: [
         'shared/**/*.test.ts',
         'vanilla/**/*.test.ts',
-        'remix/**/*.test.ts',
+        'remix/**/*.test.{ts,tsx}',
         'vanilla/build/**',
         'vanilla/public/**',
+        'remix/vite-env.d.ts',
+        'remix/vite.config.ts',
       ],
       reporter: ['text', 'lcov', 'html'],
     },
