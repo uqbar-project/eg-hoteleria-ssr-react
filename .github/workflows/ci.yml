@@ -11,11 +11,9 @@ jobs:
     name: Lint y formato
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: pnpm
@@ -26,17 +24,15 @@ jobs:
     name: Shared — Tests de dominio
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm vitest run --coverage shared/__tests__/
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v6
         with:
           files: coverage/lcov.info
           flags: shared
