@@ -19,8 +19,10 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter vanilla build:public
       - run: pnpm vitest run --coverage vanilla/__tests__/
-      - uses: codecov/codecov-action@v6
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
         with:
-          files: coverage/lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: vanilla
           flags: vanilla
           fail_ci_if_error: true

@@ -19,3 +19,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter remix exec tsc --noEmit
       - run: pnpm --filter remix build
+      - uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: remix
+          flags: remix
+          fail_ci_if_error: true
