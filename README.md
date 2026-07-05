@@ -18,8 +18,16 @@ SPA que renderiza todo con JavaScript en el cliente:
 
 ### SEO
 
-Los crawlers de Google, Bing y redes sociales (Open Graph) reciben HTML listo
-para indexar. Cada página de detalle tiene sus propias meta tags
+Los motores de búsqueda (Google, Bing, etc.) indexan páginas a partir del
+contenido HTML que reciben. Con SSR el servidor devuelve HTML con títulos,
+descripciones, precios y servicios de cada alojamiento; toda esa información
+participa del indexado y puede aparecer en los resultados de búsqueda. En
+cambio, en una SPA (CSR) el HTML inicial está prácticamente vacío —el
+contenido se completa con un fetch posterior a la inicialización de
+JavaScript— por lo que los alojamientos de nuestros clientes no serían
+indexados.
+
+Cada página de detalle tiene además sus propias meta tags
 (`og:title`, `og:description`, `og:image`) para que al compartir el link en
 WhatsApp, Twitter o Slack se vea una tarjeta con imagen, título y descripción.
 
@@ -47,7 +55,7 @@ desactivado.
 
 En la versión **Remix** el HTML inicial también se genera en servidor, y luego
 React se hidrata en cliente para las transiciones de navegación. Si se
-desactiva JS, Remix degrada gracefulmente a navegación tradicional (cada
+desactiva JS, Remix degrada a una navegación tradicional (cada
 click recarga la página completa desde el servidor).
 
 ### Performance
