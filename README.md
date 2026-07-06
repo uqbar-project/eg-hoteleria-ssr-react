@@ -129,28 +129,53 @@ pnpm test:watch         # modo watch
 
 - **Servidor**: Node.js HTTP nativo, sin frameworks.
 - **Runtime**: `tsx` (TypeScript ejecutado directamente, sin compilación previa).
-- **Vistas**: Template literals con `escapeHtml` para sanitización.
+- **Vistas**: Template literals con `escapeHtml` para sanitización. Como las
+  vistas son strings armados por concatenación, cualquier texto que contenga un
+  alojamiento (título, descripción, destino, servicios) podría incluir caracteres
+  `<>"&` que rompen el HTML o peor, permiten inyectar scripts (XSS). La función
+  `escapeHtml` reemplaza esos caracteres por sus entidades HTML
+  (`&lt;`, `&gt;`, `&quot;`, `&amp;`), exactamente como lo haría React
+  automáticamente con JSX. En Remix esto no hace falta porque React ya escapa
+  las variables en las templates.
 - **Estilos**: Tailwind CSS vía CDN.
 - **Cliente**: `public/client.ts` → compilado con esbuild → `build/client.js`.
 
 ### Arquitectura
 
-```
-cliente (navegador)
-  ↓  GET /, GET /accommodation/:id
-servidor HTTP (server.ts)
-  ↓  importa
-repositorioAlojamientos  →  data mock (shared/)
-  ↓  llama
-views/home.ts, views/detalle.ts
-  ↓  produce
-HTML completo
-  ↓  envía al cliente
-renderizado final
-```
+```mermaid
+sequenceDiagram
+    actor User as Usuario
+    participant Browser as Navegador
+    participant Server as Servidor (localhost:3000)
+    participant Repo as repositorioAlojamientos
+    participant View as views/
 
-Cada petición genera HTML completo en el servidor. El JavaScript del cliente
-solo agrega hidratación progresiva (botón "Compartir" con Web Share API).
+    User->>Browser: Abre http://localhost:3000
+    Browser->>Server: GET /
+    Server->>Repo: obtenerTodos()
+    Repo-->>Server: alojamientos[]
+    Server->>Repo: obtenerDestinos()
+    Repo-->>Server: destinos[]
+    Server->>View: homeView(alojamientos, destinos)
+    View-->>Server: HTML del listado
+    Server-->>Browser: HTML completo (200)
+
+    User->>Browser: Selecciona "Cabañas del Lago"
+    Browser->>Server: GET /accommodation/bariloche
+    Server->>Repo: obtenerPorId("bariloche")
+    Repo-->>Server: alojamiento
+    Server->>View: detalleView(alojamiento)
+    View-->>Server: HTML del detalle
+    Server-->>Browser: HTML completo con OG tags (200)
+
+    User->>Browser: Filtra por destino
+    Browser->>Server: GET /?destino=Bariloche&checkIn=...&checkOut=...
+    Server->>Repo: filtrarPorDestino(todos, "Bariloche")
+    Repo-->>Server: filtrados[]
+    Server->>View: homeView(...)
+    View-->>Server: HTML filtrado
+    Server-->>Browser: HTML completo (200)
+```
 
 ### Rutas
 
@@ -212,34 +237,30 @@ GET tradicional → HTML completo → page reload
 
 ### Progressive Enhancement
 
-El `<Form method="get">` en `_index.tsxx` funciona de dos formas según si hay
-JavaScript o no:
+El `<Form method="get">` de `_index.tsx` no es un `<form>` común. Cuando hay
+JavaScript disponible, Remix intercepta el submit, serializa los campos a
+query params y hace un `fetch()` al servidor. El servidor ejecuta el **loader**
+de la ruta y devuelve **JSON** (no HTML); Remix recibe ese JSON y re-renderiza
+solo la parte de la página que cambió (los resultados del filtro), sin perder
+el scroll, sin flash blanco, sin recargar el CSS ni las imágenes. Todo desde
+una sola llamada HTTP.
 
-| Con JS | Sin JS |
-|---|---|
-| `fetch` al loader → JSON | GET tradicional → HTML |
-| Re-render client-side | Page reload |
-| Sin flash blanco | Flash blanco breve |
-| Rápido, navegación fluida | Funcional, accesible |
+**Ventaja sobre Vanilla SSR**: En Vanilla cada submit es un GET tradicional que
+devuelve HTML completo; el navegador descarta y re-pinta todo el documento
+(parpadeo, pérdida de scroll, recarga de recursos). Remix en cambio pide solo
+los datos (JSON) y actualiza el DOM automáticamente, dando una experiencia
+cercana a una SPA pero sin dejar de ser SSR.
 
-#### Cómo probarlo
+**Ventaja sobre CSR puro**: Una SPA necesita JavaScript obligatoriamente para
+siquiera mostrar la página —sin JS el usuario ve una pantalla en blanco. Además,
+cada interacción requiere un fetch a una API externa con su propia lógica de
+estado, caching y errores. Remix en cambio funciona sin JavaScript
+(cae a GET+HTML tradicional) y no expone una API aparte: el loader es tanto la
+fuente de datos para el SSR como el endpoint que consume el fetch client-side.
 
-1. Abrí DevTools (`Cmd+Option+I`)
-2. `Cmd+Shift+P`, escribí "disable javascript", Enter
-3. Hacé una búsqueda en la página — vas a ver un page reload y HTML completo
-4. Repetí el paso 2 para reactivar JS
 
-### Sin JavaScript (progressive enhancement)
-
-Si desactivás JavaScript, el `<Form>` se comporta como un `<form>` HTML común:
-hace una navegación completa (GET), el servidor devuelve **HTML** y la página se
-renderiza desde cero. La misma URL, el mismo resultado visual.
-
-### Por qué importa
-
-Esto es **progressive enhancement**: la app funciona con o sin JavaScript. Es la
-base del SSR moderno: el servidor siempre puede generar HTML completo, y el
-cliente lo mejora con interactividad cuando hay JS disponible.
+| Re-render parcial sin flash | Page reload completo |
+| Como SPA (rápido, fluido) | Como HTML clásico (funcional) |
 
 ### Ejemplo: el loader
 
@@ -306,20 +327,6 @@ cambio es mínimo:
 
 ## 🧪 Tests
 
-### Dominio
-
-Los tests de dominio cubren el modelo de negocio en `shared/`:
-
-- `Alojamiento.calcularPrecioTotal` — cálculo de precio por noches, fechas
-  inválidas, misma fecha.
-- `Alojamiento.puntajePromedio` — promedio de opiniones, caso sin opiniones,
-  promedios no enteros.
-- `repositorioAlojamientos.obtenerTodos` — cantidad, inmutabilidad.
-- `repositorioAlojamientos.obtenerPorId` — búsqueda exacta, id inexistente, id
-  vacío.
-- `repositorioAlojamientos.obtenerDestinos` — valores únicos, orden alfabético.
-- `repositorioAlojamientos.filtrarPorDestino` — filtro exacto, case insensitive,
-  destino sin resultados, inmutabilidad.
 
 ### Frontend (Vanilla SSR)
 
