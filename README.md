@@ -76,14 +76,6 @@ servidor).
 > - **Tamaño de payload** de la respuesta HTML vs JSON de una API.
 > - **Cantidad de requests** necesarios para renderizar la página completa.
 
-### Otras características
-
-- El acceso al origen de datos no requiere filtrar información desde el cliente, por lo que es una mejora en cuanto a seguridad
-- El flujo de trabajo es más simple: los hooks se reemplazan por llamadas al server donde el formulario en html guarda el estado que se pasa como información (en lugar del useState)
-- Caching de páginas => si varios usuarios piden la misma información (y no cambia tan seguido) podemos implementar un mecanismo de cache para acelerar los tiempos de respuesta
-- El modelo SSR limita las interacciones a nivel usuario: averiguar por change, click... Tampoco tenemos el objeto window (del navegador) ni localStorage
-- Se puede mezclar componentes en el cliente vs. en el server?
-
 ## Estructura del monorepo
 
 ```
@@ -233,7 +225,41 @@ Cada ruta se maneja con una función `async` que:
 
 ---
 
+### Otras cuestiones del desarrollo
+
+- El acceso al origen de datos no requiere filtrar información en el cliente, por lo que es una mejora en cuanto a seguridad (en el navegador no queda claro si nuestro server es un BFF - backend for frontend o una aplicación completa)
+- El flujo de trabajo es más simple: los hooks se reemplazan por llamadas al server donde el formulario en html guarda el estado que se pasa como información. Fijense que no hay `useState`, `useEffect` ni similar.
+- Caching de páginas => si varios usuarios piden la misma información (y no cambia tan seguido) podemos implementar un mecanismo de cache para acelerar los tiempos de respuesta
+- El modelo SSR puro (Vanilla) limita la interacción del lado cliente. Sin JavaScript
+  no hay eventos (`click`, `change`, `input`), no hay `window` ni `localStorage`.
+  Todo lo que requiera interactividad en tiempo real necesita un enfoque distinto.
+
+  **Ejemplo — El botón Compartir (`public/client.ts`):**
+  El servidor renderiza el botón con clase `hidden`. Luego `client.ts` detecta si el
+  navegador soporta `navigator.share` (Web Share API) y, de ser así, lo muestra y
+  le asigna el evento `click`. Esta técnica se llama **hidratación progresiva**: el
+  server entrega HTML completo y funcional, y el JS cliente solo mejora ciertos
+  nodos. Para interacciones más complejas (autocomplete, drag & drop,
+  infinite scroll) haría falta más JS cliente — o migrar a Remix, que lo maneja
+  con `<Scripts />` y progressive enhancement sin esfuerzo manual.
+
+---
+
+
 ## ⚛️ Remix SSR
+
+Con Remix como framework wrappeando las llamadas al server:
+
+![demo](./video/demo-remix.gif)
+
+Inhabilitando JS en el servidor (líneas 37-38 de `root.tsx`):
+
+```tsx
+        {/* <ScrollRestoration />
+        <Scripts /> */}
+```
+
+![demo nojs](./video/demo-remix-nojs.gif)
 
 ### Stack
 
