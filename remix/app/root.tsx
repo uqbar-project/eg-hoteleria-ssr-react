@@ -3,7 +3,10 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/reac
 
 import styles from './tailwind.css?url'
 
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: styles },
+  { rel: 'icon', href: '/favicon.ico' },
+]
 
 export const meta: MetaFunction = () => [
   { title: 'Alojamientos - Encontrá tu hospedaje ideal' },

@@ -54,10 +54,17 @@ La versión **Vanilla** envía HTML puro; el único JS (~1 KB) agrega el botón
 al 100 % incluso con JavaScript
 desactivado.
 
-En la versión **Remix** el HTML inicial también se genera en servidor, y luego
-React se hidrata en cliente para las transiciones de navegación. Si se
-desactiva JS, Remix degrada a una navegación tradicional (cada
-click recarga la página completa desde el servidor).
+La versión **Remix** también genera HTML en el servidor, pero a diferencia de
+Vanilla, los **mismos componentes React** que se usaron para renderizar el HTML
+en el servidor se envían como bundle JS al cliente. Allí React los **hidrata**:
+reconoce el HTML que ya está en el DOM (el que generó el servidor) y lo
+"conecta" con los componentes, agregando manejadores de eventos y preparando el
+router para las transiciones client-side. Hasta que la hidratación termina la
+página se ve completa pero no es interactiva (los clicks hacen navegación
+tradicional). Una vez hidratada, las transiciones entre rutas se manejan desde
+el cliente sin recargar la página. Si se desactiva JS, Remix degrada a una
+navegación tradicional (cada click recarga la página completa desde el
+servidor).
 
 ### Performance
 
@@ -68,6 +75,14 @@ click recarga la página completa desde el servidor).
 > - **TTFB** (Time To First Byte) entre Vanilla, Remix y una hipotética SPA.
 > - **Tamaño de payload** de la respuesta HTML vs JSON de una API.
 > - **Cantidad de requests** necesarios para renderizar la página completa.
+
+### Otras características
+
+- El acceso al origen de datos no requiere filtrar información desde el cliente, por lo que es una mejora en cuanto a seguridad
+- El flujo de trabajo es más simple: los hooks se reemplazan por llamadas al server donde el formulario en html guarda el estado que se pasa como información (en lugar del useState)
+- Caching de páginas => si varios usuarios piden la misma información (y no cambia tan seguido) podemos implementar un mecanismo de cache para acelerar los tiempos de respuesta
+- El modelo SSR limita las interacciones a nivel usuario: averiguar por change, click... Tampoco tenemos el objeto window (del navegador) ni localStorage
+- Se puede mezclar componentes en el cliente vs. en el server?
 
 ## Estructura del monorepo
 
@@ -124,6 +139,16 @@ pnpm test:watch         # modo watch
 ---
 
 ## 🏗️ Vanilla SSR
+
+![demo](./video/demo-vanilla.gif)
+
+Aquí vemos que
+
+- al buscar Bariloche se manda un pedido al server con el destino = "Barioche"
+- el server resuelve la búsqueda y responde HTML, con meta tags de Open Graph (og) que entienden las redes sociales o Whatsapp
+- cuando hacemos click sobre la imagen, volvemos a hacer una búsqueda al server con el id del hotel (accomodation)
+- el server vuelve a responder con un HTML
+- lo único que llega de javascript es lo que necesita Tailwind (el framework de CSS) y un archivo client.js que es el compilado de nuestro archivo [client.ts](./vanilla/public/client.ts), que habilita la posibilidad de compartir el hotel para dispositivos que lo soportan (principalmente móviles)
 
 ### Stack
 
@@ -346,3 +371,7 @@ verifican las respuestas HTTP:
 pnpm test          # ejecutar una vez
 pnpm test:watch    # modo watch (re-ejecuta al cambiar archivos)
 ```
+
+## Videos recomendados
+
+- https://youtu.be/rGPpQdbDbwo

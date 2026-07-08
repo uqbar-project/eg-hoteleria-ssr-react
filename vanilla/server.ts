@@ -10,6 +10,7 @@ import { layout } from './views/layout.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const BUILD_DIR = join(__dirname, 'build')
+const SHARED_PUBLIC_DIR = join(__dirname, '..', 'shared', 'public')
 
 const MIME_TYPES: Record<string, string> = {
   '.js': 'application/javascript',
@@ -38,8 +39,13 @@ const server = createServer(async (request: IncomingMessage, response: ServerRes
   const pathname = url.pathname
 
   try {
+    if (pathname === '/favicon.ico') {
+      servirArchivoEstatico(response, pathname, SHARED_PUBLIC_DIR)
+      return
+    }
+
     if (pathname.startsWith('/static/')) {
-      servirArchivoEstatico(response, pathname)
+      servirArchivoEstatico(response, pathname, BUILD_DIR)
       return
     }
 
@@ -127,9 +133,10 @@ async function manejarDetalle(response: ServerResponse, id: string): Promise<voi
   })
 }
 
-function servirArchivoEstatico(response: ServerResponse, pathname: string): void {
-  const rutaRelativa = pathname.slice('/static/'.length)
-  const filePath = join(BUILD_DIR, rutaRelativa)
+function servirArchivoEstatico(response: ServerResponse, pathname: string, baseDir = BUILD_DIR): void {
+  const prefix = pathname.startsWith('/static/') ? '/static/' : '/'
+  const rutaRelativa = pathname.slice(prefix.length)
+  const filePath = join(baseDir, rutaRelativa)
 
   if (!existsSync(filePath)) {
     response.writeHead(404)
