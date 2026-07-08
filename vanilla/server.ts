@@ -133,7 +133,11 @@ async function manejarDetalle(response: ServerResponse, id: string): Promise<voi
   })
 }
 
-function servirArchivoEstatico(response: ServerResponse, pathname: string, baseDir = BUILD_DIR): void {
+function servirArchivoEstatico(
+  response: ServerResponse,
+  pathname: string,
+  baseDir = BUILD_DIR,
+): void {
   const prefix = pathname.startsWith('/static/') ? '/static/' : '/'
   const rutaRelativa = pathname.slice(prefix.length)
   const filePath = join(baseDir, rutaRelativa)
