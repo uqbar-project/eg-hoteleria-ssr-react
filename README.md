@@ -311,6 +311,7 @@ fuente de datos para el SSR como el endpoint que consume el fetch client-side.
 
 
 | Re-render parcial sin flash | Page reload completo |
+|---|---|
 | Como SPA (rápido, fluido) | Como HTML clásico (funcional) |
 
 ### Ejemplo: el loader
