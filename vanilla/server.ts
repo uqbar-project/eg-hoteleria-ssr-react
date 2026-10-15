@@ -75,16 +75,17 @@ const server = createServer(async (request: IncomingMessage, response: ServerRes
 })
 
 async function manejarHome(response: ServerResponse, url: URL): Promise<void> {
-  const destino = url.searchParams.get('destino') || ''
-  const checkIn = url.searchParams.get('checkIn') || ''
-  const checkOut = url.searchParams.get('checkOut') || ''
+  const busqueda = {
+    destino: url.searchParams.get('destino') || '',
+    checkIn: url.searchParams.get('checkIn') || '',
+    checkOut: url.searchParams.get('checkOut') || '',
+  }
+  const { destino, checkIn, checkOut } = busqueda
 
-  const todosLosAlojamientos = await repositorioAlojamientos.obtenerTodos()
-  const destinosDisponibles = repositorioAlojamientos.obtenerDestinos(todosLosAlojamientos)
-  const alojamientosFiltrados = repositorioAlojamientos.filtrarPorDestino(
-    todosLosAlojamientos,
-    destino || undefined,
-  )
+  const [destinosDisponibles, alojamientosFiltrados] = await Promise.all([
+    repositorioAlojamientos.obtenerDestinos(),
+    repositorioAlojamientos.filtrarPorDestino(destino || undefined),
+  ])
 
   const alojamientos = alojamientosFiltrados.map((alojamiento) => ({
     ...alojamiento,
@@ -97,9 +98,7 @@ async function manejarHome(response: ServerResponse, url: URL): Promise<void> {
   const content = homeView({
     alojamientos,
     destinos: destinosDisponibles,
-    destino,
-    checkIn,
-    checkOut,
+    busqueda,
   })
 
   responderConLayout(response, 200, {

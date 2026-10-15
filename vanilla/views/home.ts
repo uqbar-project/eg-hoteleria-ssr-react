@@ -1,3 +1,4 @@
+import type { Busqueda } from '../../shared/models/busqueda.js'
 import { escapeHtml } from '../escapeHtml.js'
 
 interface AlojamientoVista {
@@ -12,13 +13,12 @@ interface AlojamientoVista {
 interface HomeViewProps {
   alojamientos: AlojamientoVista[]
   destinos: string[]
-  destino: string
-  checkIn: string
-  checkOut: string
+  busqueda: Busqueda
 }
 
 export function homeView(props: HomeViewProps): string {
-  const { alojamientos, destinos, destino, checkIn, checkOut } = props
+  const { alojamientos, destinos, busqueda } = props
+  const { destino, checkIn, checkOut } = busqueda
 
   return `
     <div class="space-y-8">

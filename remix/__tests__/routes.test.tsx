@@ -33,9 +33,7 @@ describe('Remix _index loader', () => {
     })
     expect(result.alojamientos).toHaveLength(10)
     expect(result.destinos).toHaveLength(10)
-    expect(result.destino).toBe('')
-    expect(result.checkIn).toBe('')
-    expect(result.checkOut).toBe('')
+    expect(result.busqueda).toEqual({ destino: '', checkIn: '', checkOut: '' })
   })
 
   it('filtra por destino exacto', async () => {
@@ -47,7 +45,7 @@ describe('Remix _index loader', () => {
     expect(result.alojamientos).toHaveLength(1)
     expect(result.alojamientos[0]?.id).toBe('bariloche')
     expect(result.alojamientos[0]?.titulo).toBe('Cabañas del Lago')
-    expect(result.destino).toBe('Bariloche')
+    expect(result.busqueda.destino).toBe('Bariloche')
   })
 
   it('filtra por destino con case insensitive', async () => {
@@ -156,9 +154,7 @@ describe('Remix Index component', () => {
     mockUseLoaderData.mockReturnValue({
       alojamientos: [],
       destinos: [],
-      destino: '',
-      checkIn: '',
-      checkOut: '',
+      busqueda: { destino: '', checkIn: '', checkOut: '' },
     })
 
     const html = renderToString(<Index />)
@@ -171,9 +167,7 @@ describe('Remix Index component', () => {
     mockUseLoaderData.mockReturnValue({
       alojamientos: [],
       destinos: ['Bariloche'],
-      destino: 'Madagascar',
-      checkIn: '',
-      checkOut: '',
+      busqueda: { destino: 'Madagascar', checkIn: '', checkOut: '' },
     })
 
     const html = renderToString(<Index />)
@@ -186,9 +180,7 @@ describe('Remix Index component', () => {
     mockUseLoaderData.mockReturnValue({
       alojamientos: [],
       destinos: ['Bariloche'],
-      destino: 'Bariloche',
-      checkIn: '',
-      checkOut: '',
+      busqueda: { destino: 'Bariloche', checkIn: '', checkOut: '' },
     })
 
     const html = renderToString(<Index />)

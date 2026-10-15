@@ -36,8 +36,7 @@ describe('repositorioAlojamientos', () => {
 
   describe('obtenerDestinos', () => {
     it('devuelve destinos únicos ordenados alfabéticamente', async () => {
-      const todos = await repositorioAlojamientos.obtenerTodos()
-      const destinos = repositorioAlojamientos.obtenerDestinos(todos)
+      const destinos = await repositorioAlojamientos.obtenerDestinos()
       expect(destinos).toEqual([
         'Bariloche',
         'Buenos Aires',
@@ -53,8 +52,7 @@ describe('repositorioAlojamientos', () => {
     })
 
     it('no contiene duplicados', async () => {
-      const todos = await repositorioAlojamientos.obtenerTodos()
-      const destinos = repositorioAlojamientos.obtenerDestinos(todos)
+      const destinos = await repositorioAlojamientos.obtenerDestinos()
       const sinDuplicados = new Set(destinos)
       expect(sinDuplicados.size).toBe(destinos.length)
     })
@@ -63,35 +61,32 @@ describe('repositorioAlojamientos', () => {
   describe('filtrarPorDestino', () => {
     it('devuelve todos los alojamientos si no se especifica destino', async () => {
       const todos = await repositorioAlojamientos.obtenerTodos()
-      const filtrados = repositorioAlojamientos.filtrarPorDestino(todos)
+      const filtrados = await repositorioAlojamientos.filtrarPorDestino()
       expect(filtrados).toHaveLength(todos.length)
     })
 
     it('filtra por destino exacto (case insensitive)', async () => {
-      const todos = await repositorioAlojamientos.obtenerTodos()
-      const filtrados = repositorioAlojamientos.filtrarPorDestino(todos, 'bariloche')
+      const filtrados = await repositorioAlojamientos.filtrarPorDestino('bariloche')
       expect(filtrados).toHaveLength(1)
       expect(filtrados[0]?.id).toBe('bariloche')
     })
 
     it('filtra por destino con mayúsculas y minúsculas mixtas', async () => {
-      const todos = await repositorioAlojamientos.obtenerTodos()
-      const filtrados = repositorioAlojamientos.filtrarPorDestino(todos, 'BARILOCHE')
+      const filtrados = await repositorioAlojamientos.filtrarPorDestino('BARILOCHE')
       expect(filtrados).toHaveLength(1)
       expect(filtrados[0]?.id).toBe('bariloche')
     })
 
     it('devuelve array vacío para destino sin coincidencias', async () => {
-      const todos = await repositorioAlojamientos.obtenerTodos()
-      const filtrados = repositorioAlojamientos.filtrarPorDestino(todos, 'Madagascar')
+      const filtrados = await repositorioAlojamientos.filtrarPorDestino('Madagascar')
       expect(filtrados).toHaveLength(0)
     })
 
     it('no muta el array original', async () => {
-      const todos = await repositorioAlojamientos.obtenerTodos()
-      const copia = [...todos]
-      repositorioAlojamientos.filtrarPorDestino(todos, 'Bariloche')
-      expect(todos).toHaveLength(copia.length)
+      const todosAntes = await repositorioAlojamientos.obtenerTodos()
+      await repositorioAlojamientos.filtrarPorDestino('Bariloche')
+      const todosDespues = await repositorioAlojamientos.obtenerTodos()
+      expect(todosDespues).toHaveLength(todosAntes.length)
     })
   })
 })

@@ -169,12 +169,17 @@ sequenceDiagram
 
     User->>Browser: Abre http://localhost:3000
     Browser->>Server: GET /
-    Server->>Repo: obtenerTodos()
-    Repo-->>Server: alojamientos[]
-    Server->>Repo: obtenerDestinos()
-    Repo-->>Server: destinos[]
-    Server->>View: homeView(alojamientos, destinos)
+    par Combo de destinos
+        Server->>Repo: obtenerDestinos()
+        Repo-->>Server: destinos[]
+    and Grilla de alojamientos
+        Server->>Repo: filtrarPorDestino(undefined)
+        Repo-->>Server: alojamientos[]
+    end
+    Server->>Server: map calcularPrecioTotal(checkIn, checkOut)
+    Server->>View: homeView({alojamientos, destinos, busqueda})
     View-->>Server: HTML del listado
+    Server->>Server: layout({content})
     Server-->>Browser: HTML completo (200)
 
     User->>Browser: Selecciona "Cabañas del Lago"
@@ -183,14 +188,22 @@ sequenceDiagram
     Repo-->>Server: alojamiento
     Server->>View: detalleView(alojamiento)
     View-->>Server: HTML del detalle
+    Server->>Server: layout({content, ogTitle, ogImage})
     Server-->>Browser: HTML completo con OG tags (200)
 
     User->>Browser: Filtra por destino
     Browser->>Server: GET /?destino=Bariloche&checkIn=...&checkOut=...
-    Server->>Repo: filtrarPorDestino(todos, "Bariloche")
-    Repo-->>Server: filtrados[]
-    Server->>View: homeView(...)
+    par Combo de destinos
+        Server->>Repo: obtenerDestinos()
+        Repo-->>Server: destinos[]
+    and Grilla filtrada
+        Server->>Repo: filtrarPorDestino("Bariloche")
+        Repo-->>Server: filtrados[]
+    end
+    Server->>Server: map calcularPrecioTotal(checkIn, checkOut)
+    Server->>View: homeView({alojamientos, destinos, busqueda})
     View-->>Server: HTML filtrado
+    Server->>Server: layout({content})
     Server-->>Browser: HTML completo (200)
 ```
 
@@ -207,7 +220,7 @@ sequenceDiagram
 ### Flujo de render
 
 Cada ruta se maneja con una función `async` que:
-1. Obtiene datos del repositorio (con un delay simulado de 100ms).
+1. Obtiene datos del repositorio (con un delay didáctico de 100ms que simula latencia de DB/red, ver `shared/repositories/alojamientos.ts`).
 2. Pasa los datos a la función `view` correspondiente.
 3. Envuelve el HTML generado en el `layout` (head, header, footer).
 4. Envía la respuesta con el status HTTP adecuado.
@@ -320,12 +333,18 @@ fuente de datos para el SSR como el endpoint que consume el fetch client-side.
 // remix/app/routes/_index.tsx
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
-  const destino = url.searchParams.get('destino') ?? ''
+  const busqueda: Busqueda = {
+    destino: url.searchParams.get('destino') ?? '',
+    checkIn: url.searchParams.get('checkIn') ?? '',
+    checkOut: url.searchParams.get('checkOut') ?? '',
+  }
 
-  const alojamientos = await repositorioAlojamientos.obtenerTodos()
-  const filtrados = repositorioAlojamientos.filtrarPorDestino(alojamientos, destino || undefined)
+  const [destinos, filtrados] = await Promise.all([
+    repositorioAlojamientos.obtenerDestinos(),
+    repositorioAlojamientos.filtrarPorDestino(busqueda.destino || undefined),
+  ])
 
-  return { alojamientos: filtrados, destino }
+  return { alojamientos: filtrados, destinos, busqueda }
   //              ^^^^^
   // Con JS: vuelve como JSON al cliente, Remix lo hidrata
   // Sin JS: el servidor serializa esto, lo mete en el HTML y lo envía completo

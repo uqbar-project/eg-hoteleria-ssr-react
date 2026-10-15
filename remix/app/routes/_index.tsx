@@ -1,17 +1,22 @@
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 
+import type { Busqueda } from '../../../shared/models/busqueda.js'
 import { repositorioAlojamientos } from '../../../shared/repositories/alojamientos.js'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
-  const destino = url.searchParams.get('destino') ?? ''
-  const checkIn = url.searchParams.get('checkIn') ?? ''
-  const checkOut = url.searchParams.get('checkOut') ?? ''
+  const busqueda: Busqueda = {
+    destino: url.searchParams.get('destino') ?? '',
+    checkIn: url.searchParams.get('checkIn') ?? '',
+    checkOut: url.searchParams.get('checkOut') ?? '',
+  }
+  const { destino, checkIn, checkOut } = busqueda
 
-  const todos = await repositorioAlojamientos.obtenerTodos()
-  const destinos = repositorioAlojamientos.obtenerDestinos(todos)
-  const filtrados = repositorioAlojamientos.filtrarPorDestino(todos, destino || undefined)
+  const [destinos, filtrados] = await Promise.all([
+    repositorioAlojamientos.obtenerDestinos(),
+    repositorioAlojamientos.filtrarPorDestino(destino || undefined),
+  ])
 
   const alojamientos = filtrados.map((alojamiento) => ({
     ...alojamiento,
@@ -21,11 +26,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
         : alojamiento.precioPorNoche,
   }))
 
-  return { alojamientos, destinos, destino, checkIn, checkOut }
+  return { alojamientos, destinos, busqueda }
 }
 
 export default function Index() {
-  const { alojamientos, destinos, destino, checkIn, checkOut } = useLoaderData<typeof loader>()
+  const { alojamientos, destinos, busqueda } = useLoaderData<typeof loader>()
+  const { destino, checkIn, checkOut } = busqueda
 
   return (
     <div className="space-y-8">
