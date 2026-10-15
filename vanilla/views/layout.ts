@@ -25,6 +25,18 @@ export function layout(options: LayoutOptions): string {
   ${ogImage ? `<meta property="og:image" content="${escapeHtml(ogImage)}" />` : ''}
   <meta property="og:type" content="website" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Chevron propia para el select de destino: oculta la flecha nativa
+       (pegada al borde según el navegador) y dibuja una con aire a la derecha. */
+    .chevron-select.chevron-select {
+      appearance: none;
+      padding-right: 2.5rem;
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1em 1em;
+    }
+  </style>
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased">
   <header class="bg-white border-b border-gray-200 sticky top-0 z-10">

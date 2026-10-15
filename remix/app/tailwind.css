@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+/* Chevron propia para el select de destino: oculta la flecha nativa
+   (pegada al borde según el navegador) y dibuja una con aire a la derecha. */
+.chevron-select.chevron-select {
+  appearance: none;
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1em 1em;
+}

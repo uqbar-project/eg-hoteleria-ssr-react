@@ -41,7 +41,10 @@ export default function Index() {
           Encontrá el hospedaje perfecto para tus próximas vacaciones
         </p>
 
-        <Form method="get" className="flex flex-wrap gap-4 items-end">
+        <Form
+          method="get"
+          className="flex flex-col gap-5 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6 md:flex-row md:flex-wrap md:items-end"
+        >
           <div className="flex-1 min-w-[200px]">
             <label htmlFor="destino" className="block text-sm font-medium text-gray-700 mb-1">
               Destino
@@ -50,7 +53,7 @@ export default function Index() {
               id="destino"
               name="destino"
               defaultValue={destino}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 chevron-select focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             >
               <option value="">Todos los destinos</option>
               {destinos.map((destino) => (
@@ -70,7 +73,7 @@ export default function Index() {
               name="checkIn"
               type="date"
               defaultValue={checkIn}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             />
           </div>
 
@@ -83,13 +86,13 @@ export default function Index() {
               name="checkOut"
               type="date"
               defaultValue={checkOut}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             />
           </div>
 
           <button
             type="submit"
-            className="bg-sky-700 text-white px-6 py-2 rounded-lg hover:bg-sky-600 font-medium"
+            className="w-full shrink-0 rounded-lg border border-transparent bg-sky-700 px-6 py-2.5 font-medium text-white hover:bg-sky-600 md:w-auto"
           >
             Buscar
           </button>

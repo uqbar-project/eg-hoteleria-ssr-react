@@ -16,24 +16,31 @@ interface HomeViewProps {
   busqueda: Busqueda
 }
 
+const html = (strings: TemplateStringsArray, ...values: unknown[]) =>
+  strings.reduce((acc, str, i) => acc + str + (values[i] ?? ''), '')
+
 export function homeView(props: HomeViewProps): string {
   const { alojamientos, destinos, busqueda } = props
   const { destino, checkIn, checkOut } = busqueda
 
-  return `
+  return html`
     <div class="space-y-8">
       <section>
         <h1 class="text-3xl font-bold text-gray-900 mb-2">Busc\u00e1 tu alojamiento ideal</h1>
         <p class="text-gray-600 mb-6">Encontr\u00e1 el hospedaje perfecto para tus pr\u00f3ximas vacaciones</p>
 
-        <form method="get" data-testid="search-form" class="flex flex-wrap gap-4 items-end">
+        <form
+          method="get"
+          data-testid="search-form"
+          class="flex flex-col gap-5 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6 md:flex-row md:flex-wrap md:items-end"
+        >
           <div class="flex-1 min-w-[200px]">
             <label for="destino" class="block text-sm font-medium text-gray-700 mb-1">Destino</label>
             <select
               id="destino"
               name="destino"
               data-testid="destino-select"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 chevron-select focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             >
               <option value="">Todos los destinos</option>
               ${destinos.map((destinoOpcion) => `<option value="${escapeHtml(destinoOpcion)}" ${destinoOpcion === destino ? 'selected' : ''}>${escapeHtml(destinoOpcion)}</option>`).join('')}
@@ -48,7 +55,7 @@ export function homeView(props: HomeViewProps): string {
               type="date"
               data-testid="checkin-input"
               value="${escapeHtml(checkIn)}"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             />
           </div>
 
@@ -60,13 +67,13 @@ export function homeView(props: HomeViewProps): string {
               type="date"
               data-testid="checkout-input"
               value="${escapeHtml(checkOut)}"
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             />
           </div>
 
           <button
             type="submit"
-            class="bg-sky-700 text-white px-6 py-2 rounded-lg hover:bg-sky-600 font-medium"
+            class="w-full shrink-0 rounded-lg border border-transparent bg-sky-700 px-6 py-2.5 font-medium text-white hover:bg-sky-600 md:w-auto"
           >
             Buscar
           </button>
