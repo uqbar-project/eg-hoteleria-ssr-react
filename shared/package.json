@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "date-fns": "^4.4.0"
+    "date-fns": "4.4.0"
   }
 }
