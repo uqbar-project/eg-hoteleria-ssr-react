@@ -91,9 +91,9 @@ export function homeView(props: HomeViewProps): string {
             : `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="card-grid">
               ${alojamientos
                 .map(
-                  (alojamiento) => `
+                  (alojamiento, index) => `
                 <a href="/accommodation/${escapeHtml(alojamiento.id)}" data-testid="card-${escapeHtml(alojamiento.id)}" class="flex flex-col bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-                  <img src="${escapeHtml(alojamiento.imagen)}" alt="${escapeHtml(alojamiento.titulo)}" class="w-full h-48 object-cover" />
+                  <img src="${escapeHtml(alojamiento.imagen)}" alt="${escapeHtml(alojamiento.titulo)}" ${index === 0 ? 'fetchpriority="high"' : ''} class="w-full h-48 object-cover" />
                   <div class="flex flex-col flex-1 p-4 gap-2">
                     <h3 class="text-lg font-semibold text-gray-900">${escapeHtml(alojamiento.titulo)}</h3>
                     <p class="text-sm text-gray-500 flex-1">${escapeHtml(alojamiento.descripcionCorta)}</p>

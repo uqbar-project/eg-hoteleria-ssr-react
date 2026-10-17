@@ -16,6 +16,7 @@ export function detalleView(props: DetalleViewProps): string {
         <img
           src="${escapeHtml(alojamiento.imagen)}"
           alt="${escapeHtml(alojamiento.titulo)}"
+          fetchpriority="high"
           class="w-full h-80 object-cover"
         />
 

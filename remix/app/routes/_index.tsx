@@ -108,7 +108,7 @@ export default function Index() {
           <p className="text-gray-500">No se encontraron alojamientos para este destino.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {alojamientos.map((alojamiento) => (
+            {alojamientos.map((alojamiento, index) => (
               <Link
                 key={alojamiento.id}
                 to={`/accommodation/${alojamiento.id}`}
@@ -117,6 +117,7 @@ export default function Index() {
                 <img
                   src={alojamiento.imagen}
                   alt={alojamiento.titulo}
+                  fetchPriority={index === 0 ? 'high' : undefined}
                   className="w-full h-48 object-cover"
                 />
                 <div className="flex flex-col flex-1 p-4 gap-2">

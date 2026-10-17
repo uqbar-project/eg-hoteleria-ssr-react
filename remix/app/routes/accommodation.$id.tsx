@@ -41,6 +41,7 @@ export default function AccommodacionDetalle() {
         <img
           src={alojamiento.imagen}
           alt={alojamiento.titulo}
+          fetchPriority="high"
           className="w-full h-80 object-cover"
         />
 

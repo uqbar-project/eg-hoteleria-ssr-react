@@ -4,6 +4,11 @@ import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
+  server: {
+    // Permití túneles públicos (ej: cloudflared) para demos de clase.
+    // Sin esto, Vite bloquea hosts desconocidos (chequeo anti DNS-rebinding).
+    allowedHosts: ['.trycloudflare.com'],
+  },
   plugins: [
     remix({
       future: {
